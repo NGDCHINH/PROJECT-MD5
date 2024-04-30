@@ -22,6 +22,4 @@ export class UserEntity {
   roles: number;
   @OneToMany(() => ScoreEntity, (score) => score.user)
   scores: ScoreEntity[];
-  @OneToMany(() => QuizEntity, (quiz) => quiz.examier)
-  quizzes: QuizEntity[];
 }

@@ -1,11 +1,66 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
+import { QuestionEntity } from './entities/question.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import axios from 'axios';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class QuestionsService {
-  create(createQuestionDto: CreateQuestionDto) {
-    return 'This action adds a new question';
+  constructor(
+    @InjectRepository(QuestionEntity)
+    private readonly questionRepository: Repository<QuestionEntity>,
+  ) {}
+
+  async create(createQuestionDto: CreateQuestionDto) {
+    const question = new QuestionEntity();
+    question.questionNumber = createQuestionDto.questionNumber;
+    question.category = createQuestionDto.category;
+    question.question = createQuestionDto.question;
+    question.options = createQuestionDto.options;
+    question.correctOption = createQuestionDto.correctOption;
+
+    // Download and save the image
+    if (createQuestionDto.image) {
+      try {
+        const imagePath = await this.downloadImage(createQuestionDto.image);
+        question.image = imagePath;
+      } catch (error) {
+        throw new HttpException(
+          'Failed to download image',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
+    return this.questionRepository.save(question);
+  }
+
+  async downloadImage(imageUrl: string): Promise<string> {
+    const imageName = path.basename(imageUrl);
+    const imageDir = path.join(__dirname, '..', '..', 'shared', 'image');
+    const imagePath = path.join(imageDir, imageName);
+
+    // Create the directory if it doesn't exist
+    if (!fs.existsSync(imageDir)) {
+      fs.mkdirSync(imageDir, { recursive: true });
+    }
+
+    const response = await axios({
+      method: 'GET',
+      url: imageUrl,
+      responseType: 'stream',
+    });
+
+    response.data.pipe(fs.createWriteStream(imagePath));
+
+    return new Promise((resolve, reject) => {
+      response.data.on('end', () => resolve(imagePath));
+      response.data.on('error', () => reject('Failed to download image'));
+    });
   }
 
   findAll() {

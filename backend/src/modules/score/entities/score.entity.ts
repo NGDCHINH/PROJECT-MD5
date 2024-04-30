@@ -1,21 +1,30 @@
-import { QuizEntity } from 'src/modules/quizs/entities/quiz.entity';
-import { UserEntity } from 'src/modules/users/entities/user.entity';
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-
-@Entity({ name: 'scores' })
+// report.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { UserEntity } from '../../users/entities/user.entity';
+import { QuizEntity } from '../../quizs/entities/quiz.entity';
+@Entity({ name: 'score' })
 export class ScoreEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column()
   score: number;
+
+  @Column()
+  total: number;
+
+  @Column()
+  percentage: number;
+
+  @Column()
+  result: string;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
   @ManyToOne(() => UserEntity, (user) => user.scores)
   user: UserEntity;
-  @ManyToOne(() => QuizEntity, (quiz) => quiz.scores)
+
+  @ManyToOne(() => QuizEntity, (quiz) => quiz.score)
   quiz: QuizEntity;
 }

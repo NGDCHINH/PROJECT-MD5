@@ -1,22 +1,29 @@
-import { AnswerEntity } from 'src/modules/answers/entities/answer.entity';
-import { QuizEntity } from 'src/modules/quizs/entities/quiz.entity';
-import {
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  Entity,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { QuizEntity } from '../../quizs/entities/quiz.entity';
+
 @Entity({ name: 'questions' })
 export class QuestionEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column()
-  title: string;
+  category: string;
+
   @Column()
-  description: string;
-  @ManyToOne(() => QuizEntity, (quiz) => quiz.questions)
+  questionNumber: number;
+
+  @Column()
+  question: string;
+
+  @Column({ nullable: true })
+  image: string;
+
+  @Column('json', { nullable: true })
+  options: object;
+
+  @Column({ default: null })
+  correctOption: number;
+
+  @ManyToOne(() => QuizEntity, (quiz) => quiz.questionList)
   quiz: QuizEntity;
-  @OneToMany(() => AnswerEntity, (answer) => answer.id)
-  answers: AnswerEntity[];
 }

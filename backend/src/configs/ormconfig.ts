@@ -1,4 +1,3 @@
-import { AnswerEntity } from 'src/modules/answers/entities/answer.entity';
 import { QuestionEntity } from 'src/modules/questions/entities/question.entity';
 import { QuizEntity } from 'src/modules/quizs/entities/quiz.entity';
 import { ScoreEntity } from 'src/modules/score/entities/score.entity';
@@ -13,6 +12,6 @@ export const config: MysqlConnectionOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [UserEntity, QuizEntity, QuestionEntity, AnswerEntity, ScoreEntity],
+  entities: [UserEntity, QuizEntity, QuestionEntity, ScoreEntity],
   synchronize: true,
 };

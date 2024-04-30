@@ -1,29 +1,35 @@
-import { QuestionEntity } from 'src/modules/questions/entities/question.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { QuestionEntity } from '../../questions/entities/question.entity';
 import { ScoreEntity } from 'src/modules/score/entities/score.entity';
-import { UserEntity } from 'src/modules/users/entities/user.entity';
-import {
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  Entity,
-  ManyToOne,
-} from 'typeorm';
-@Entity({ name: 'quizzes' })
+
+@Entity({ name: 'quiz' })
 export class QuizEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ unique: true })
+  name: string;
+
   @Column()
-  title: string;
+  category: string;
+
   @Column()
-  description: string;
+  passingPercentage: number;
+
   @Column()
-  isPublic: boolean;
-  @ManyToOne(() => UserEntity, (user) => user.quizzes)
-  examier: UserEntity;
+  createdBy: number;
+
+  @Column({ nullable: true })
+  attemptsAllowedPerUser: number;
+
+  @Column({ default: false })
+  isPublished: boolean;
+
+  @Column()
+  isPublicQuiz: boolean;
 
   @OneToMany(() => QuestionEntity, (question) => question.quiz)
-  questions: QuestionEntity[];
-
+  questionList: QuestionEntity[];
   @OneToMany(() => ScoreEntity, (score) => score.quiz)
-  scores: ScoreEntity[];
+  score: ScoreEntity[];
 }
