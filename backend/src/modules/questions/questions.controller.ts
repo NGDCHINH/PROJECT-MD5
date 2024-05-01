@@ -6,8 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UploadedFile,
-  UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
@@ -25,9 +24,9 @@ export class QuestionsController {
   findAll() {
     return this.questionsService.findAll();
   }
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.questionsService.findOne(+id);
+  @Get('search')
+  findOne(@Query('q') q: string) {
+    return this.questionsService.search(q);
   }
   @Patch(':id')
   update(

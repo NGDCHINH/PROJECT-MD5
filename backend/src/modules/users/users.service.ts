@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -72,8 +72,18 @@ export class UsersService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const question = await this.userRepository.findOne({ where: { id } });
+
+    if (!question) {
+      throw new NotFoundException(`Không tìm thấy câu hỏi`);
+    }
+
+    Object.assign(question, updateUserDto);
+
+    await this.userRepository.save(question);
+
+    return `Sửa thành công`;
   }
 
   remove(id: number) {

@@ -12,12 +12,12 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
-import { ValidateUserDto } from './dto/vailidate-user.dto';
 import { JwtAuthGuard } from 'src/shared/guard/jwt-auth.strategy';
 
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   findUser(@Request() req) {

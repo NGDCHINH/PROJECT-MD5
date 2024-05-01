@@ -10,9 +10,6 @@ export class QuestionEntity {
   category: string;
 
   @Column()
-  questionNumber: number;
-
-  @Column()
   question: string;
 
   @Column({ nullable: true })
@@ -24,6 +21,6 @@ export class QuestionEntity {
   @Column({ default: null })
   correctOption: number;
 
-  @ManyToOne(() => QuizEntity, (quiz) => quiz.questionList)
+  @ManyToOne(() => QuizEntity, (quiz) => quiz.questions)
   quiz: QuizEntity;
 }

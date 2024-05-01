@@ -1,8 +1,13 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { QuestionEntity } from './entities/question.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import * as admin from 'firebase-admin';
@@ -18,23 +23,22 @@ export class QuestionsService {
 
   async create(createQuestionDto: CreateQuestionDto) {
     const question = new QuestionEntity();
-    question.questionNumber = createQuestionDto.questionNumber;
     question.category = createQuestionDto.category;
     question.question = createQuestionDto.question;
     question.options = createQuestionDto.options;
     question.correctOption = createQuestionDto.correctOption;
 
-    // Initialize Firebase Admin SDK
-    try {
-      const serviceAccount = require(process.env.FIREBASE_ACCOUNT_KEY);
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        storageBucket: process.env.FIREBASE_URL,
-      });
-    } catch (error) {
-      console.error('Error initializing Firebase:', error);
-      process.exit(1);
-    }
+    // // Initialize Firebase Admin SDK
+    // try {
+    //   const serviceAccount = require(process.env.FIREBASE_ACCOUNT_KEY);
+    //   admin.initializeApp({
+    //     credential: admin.credential.cert(serviceAccount),
+    //     storageBucket: process.env.FIREBASE_URL,
+    //   });
+    // } catch (error) {
+    //   console.error('Error initializing Firebase:', error);
+    //   process.exit(1);
+    // }
 
     // Download and save the image
     if (createQuestionDto.image) {
@@ -78,65 +82,40 @@ export class QuestionsService {
     return this.questionRepository.save(question);
   }
 
-  // async create(createQuestionDto: CreateQuestionDto) {
-  //   const question = new QuestionEntity();
-  //   question.questionNumber = createQuestionDto.questionNumber;
-  //   question.category = createQuestionDto.category;
-  //   question.question = createQuestionDto.question;
-  //   question.options = createQuestionDto.options;
-  //   question.correctOption = createQuestionDto.correctOption;
-
-  //   // Download and save the image
-  //   if (createQuestionDto.image) {
-  //     try {
-  //       const imagePath = await this.downloadImage(createQuestionDto.image);
-  //       question.image = imagePath;
-  //     } catch (error) {
-  //       throw new HttpException(
-  //         'Failed to download image',
-  //         HttpStatus.INTERNAL_SERVER_ERROR,
-  //       );
-  //     }
-  //   }
-  //   return this.questionRepository.save(question);
-  // }
-
-  // async downloadImage(imageUrl: string): Promise<string> {
-  //   const imageName = path.basename(imageUrl);
-  //   const imageDir = path.join(__dirname, '..', '..', 'shared', 'image');
-  //   const imagePath = path.join(imageDir, imageName);
-
-  //   if (!fs.existsSync(imageDir)) {
-  //     fs.mkdirSync(imageDir, { recursive: true });
-  //   }
-
-  //   const response = await axios({
-  //     method: 'GET',
-  //     url: imageUrl,
-  //     responseType: 'stream',
-  //   });
-
-  //   response.data.pipe(fs.createWriteStream(imagePath));
-
-  //   return new Promise((resolve, reject) => {
-  //     response.data.on('end', () => resolve(imagePath));
-  //     response.data.on('error', () => reject('Failed to download image'));
-  //   });
-  // }
-
-  findAll() {
-    return `This action returns all questions`;
+  async findAll() {
+    const data = await this.questionRepository.find();
+    return data;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} question`;
+  async search(q: string) {
+    const data = await this.questionRepository.find({
+      where: { category: ILike(`%${q}%`) },
+    });
+    return data;
+  }
+  async update(id: number, updateQuestionDto: UpdateQuestionDto) {
+    const question = await this.questionRepository.findOne({ where: { id } });
+
+    if (!question) {
+      throw new NotFoundException(`Không tìm thấy câu hỏi`);
+    }
+
+    Object.assign(question, updateQuestionDto);
+
+    await this.questionRepository.save(question);
+
+    return `Sửa thành công`;
   }
 
-  update(id: number, updateQuestionDto: UpdateQuestionDto) {
-    return `This action updates a #${id} question`;
-  }
+  async remove(id: number) {
+    const question = await this.questionRepository.findOne({
+      where: { id },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} question`;
+    if (!question) {
+      throw new NotFoundException(`Không tìm thấy câu hỏi`);
+    }
+    await this.questionRepository.remove(question);
+    return `Xoá thành công`;
   }
 }

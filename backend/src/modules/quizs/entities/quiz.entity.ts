@@ -8,7 +8,7 @@ export class QuizEntity {
   id: number;
 
   @Column({ unique: true })
-  name: string;
+  title: string;
 
   @Column()
   category: string;
@@ -17,19 +17,14 @@ export class QuizEntity {
   passingPercentage: number;
 
   @Column()
-  createdBy: number;
-
-  @Column({ nullable: true })
-  attemptsAllowedPerUser: number;
+  createdBy: string;
 
   @Column({ default: false })
   isPublished: boolean;
 
-  @Column()
-  isPublicQuiz: boolean;
-
   @OneToMany(() => QuestionEntity, (question) => question.quiz)
-  questionList: QuestionEntity[];
+  questions: QuestionEntity[];
+
   @OneToMany(() => ScoreEntity, (score) => score.quiz)
-  score: ScoreEntity[];
+  scores: ScoreEntity[];
 }

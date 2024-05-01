@@ -17,8 +17,6 @@ export class JwtAuthService {
   async login(user: any) {
     try {
       const payload = {
-        email: user.email,
-        id: user.id,
         role: user.role,
         username: user.username,
         avatar: user.avatar,

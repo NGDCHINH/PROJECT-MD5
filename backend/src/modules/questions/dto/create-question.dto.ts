@@ -2,8 +2,6 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateQuestionDto {
   @IsNotEmpty()
-  questionNumber: number;
-  @IsNotEmpty()
   category: string;
   @IsNotEmpty()
   question: string;
