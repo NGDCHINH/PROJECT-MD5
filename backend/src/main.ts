@@ -5,16 +5,24 @@ import * as admin from 'firebase-admin';
 import * as cors from 'cors';
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  admin.initializeApp({
-    credential: admin.credential.cert(
-      process.env.FIREBASE_SERVICE_ACCOUNT_PATH,
-    ),
-    storageBucket: process.env.FIREBASE_URL,
-  });
+
+  // try {
+  //   const serviceAccount = require(process.env.FIREBASE_ACCOUNT_KEY);
+  //   admin.initializeApp({
+  //     credential: admin.credential.cert(serviceAccount),
+  //     storageBucket: process.env.FIREBASE_URL,
+  //   });
+  // } catch (error) {
+  //   console.error('Error initializing Firebase:', error);
+  //   process.exit(1);
+  // }
+
   app.enableCors();
+
   app.use(
     cors({
       origin: 'http://localhost:5173',
@@ -22,8 +30,10 @@ async function bootstrap() {
       credentials: true,
     }),
   );
+
   await app.listen(PORT, () => {
     console.log(`Application is running on: http://localhost:${PORT}`);
   });
 }
+
 bootstrap();

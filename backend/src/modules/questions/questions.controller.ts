@@ -21,17 +21,14 @@ export class QuestionsController {
   async create(@Body() createQuestionDto: CreateQuestionDto) {
     return this.questionsService.create(createQuestionDto);
   }
-
   @Get()
   findAll() {
     return this.questionsService.findAll();
   }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.questionsService.findOne(+id);
   }
-
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -39,7 +36,6 @@ export class QuestionsController {
   ) {
     return this.questionsService.update(+id, updateQuestionDto);
   }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.questionsService.remove(+id);
