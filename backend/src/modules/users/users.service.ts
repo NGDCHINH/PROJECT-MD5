@@ -73,20 +73,27 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const question = await this.userRepository.findOne({ where: { id } });
+    const data = await this.userRepository.findOne({ where: { id } });
 
-    if (!question) {
-      throw new NotFoundException(`Không tìm thấy câu hỏi`);
+    if (!data) {
+      throw new NotFoundException(`Không tìm thấy người dùng`);
     }
 
-    Object.assign(question, updateUserDto);
+    Object.assign(data, updateUserDto);
 
-    await this.userRepository.save(question);
+    await this.userRepository.save(data);
 
     return `Sửa thành công`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const data = await this.userRepository.findOne({ where: { id } });
+
+    if (!data) {
+      throw new NotFoundException(`Không tìm thấy người dùng`);
+    }
+
+    await this.userRepository.remove(data);
+    return `Xoá thành công người này`;
   }
 }

@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
+  Req,
 } from '@nestjs/common';
 import { QuizsService } from './quizs.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
@@ -22,10 +24,14 @@ export class QuizsController {
   create(@Body() createQuizDto: CreateQuizDto) {
     return this.quizsService.create(createQuizDto);
   }
-
   @Get()
   findAll() {
     return this.quizsService.findAll();
+  }
+
+  @Get('search')
+  search(@Query('q') q: string) {
+    return this.quizsService.search(q);
   }
 
   @Get(':id')

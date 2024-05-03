@@ -35,7 +35,7 @@ const items: MenuProps["items"] = [
       getItem(
         "Trang chủ",
         "1",
-        <Link to={"/"}>
+        <Link to={"/app"}>
           {" "}
           <IoHomeOutline />{" "}
         </Link>
@@ -43,7 +43,9 @@ const items: MenuProps["items"] = [
     ],
     "group"
   ),
-  getItem("Quiz", "sub1", <MailOutlined />, [getItem("Danh sách", "2")]),
+  getItem("Quiz", "sub1", <MailOutlined />, [
+    getItem("Danh sách", "2", <Link to={"quiz"}></Link>),
+  ]),
 
   { type: "divider" },
 

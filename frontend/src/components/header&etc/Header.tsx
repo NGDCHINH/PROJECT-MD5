@@ -17,7 +17,6 @@ export const Header = ({ sibarToggle, setSibarToggle }: any) => {
 
   const checkJWT = () => {
     const jwt = Cookies.get("token");
-    console.log("JWT:", jwt);
 
     setIsLoggedIn(!!jwt);
     if (!!jwt) {
@@ -34,7 +33,6 @@ export const Header = ({ sibarToggle, setSibarToggle }: any) => {
         },
       })
       .then((response) => {
-        console.log("User info:", response.data);
         setUser(response.data);
       })
       .catch((error) => {
@@ -51,7 +49,6 @@ export const Header = ({ sibarToggle, setSibarToggle }: any) => {
   };
 
   const handleSignOut = () => {
-    // Clear JWT from storage or cookie
     Cookies.remove("token");
     setIsLoggedIn(false);
     setIsMenuOpen(false);
@@ -80,7 +77,6 @@ export const Header = ({ sibarToggle, setSibarToggle }: any) => {
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   <span className="sr-only">View notifications</span>
-                  {/* Notification icon */}
                 </button>
                 <div className="ml-3 relative">
                   <div>

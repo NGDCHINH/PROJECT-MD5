@@ -11,6 +11,9 @@ export class QuizEntity {
   title: string;
 
   @Column()
+  image: string;
+
+  @Column()
   category: string;
 
   @Column()

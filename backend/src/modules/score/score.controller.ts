@@ -1,15 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Req,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ScoreService } from './score.service';
 import { CreateScoreDto } from './dto/create-score.dto';
 import { UpdateScoreDto } from './dto/update-score.dto';
+import { JwtAuthGuard } from 'src/shared/guard/jwt-auth.strategy';
 
 @Controller('score')
 export class ScoreController {
   constructor(private readonly scoreService: ScoreService) {}
 
   @Post()
-  create(@Body() createScoreDto: CreateScoreDto) {
-    return this.scoreService.create(createScoreDto);
+  @UseGuards(JwtAuthGuard)
+  async saveScore(@Body() createScoreDto: CreateScoreDto, @Req() req) {
+    const userId = req.user.id;
+    const quizId = req.body.quizId;
+    return await this.scoreService.saveScore(createScoreDto, userId, quizId);
   }
 
   @Get()

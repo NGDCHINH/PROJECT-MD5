@@ -1,1 +1,5 @@
-export class CreateScoreDto {}
+export class CreateScoreDto {
+  score: number;
+  total: number;
+  result: string;
+}

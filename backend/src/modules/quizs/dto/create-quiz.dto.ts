@@ -5,6 +5,7 @@ export class CreateQuizDto {
   title: string;
   @IsNotEmpty()
   category: string;
+  image: string;
   @IsNotEmpty()
   passingPercentage: number;
   createdBy: string;

@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cors from 'cors';
 import * as admin from 'firebase-admin';
+import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 async function bootstrap() {
@@ -19,7 +21,6 @@ async function bootstrap() {
     console.error('Error initializing Firebase:', error);
     process.exit(1);
   }
-  app.enableCors();
   app.use(
     cors({
       origin: 'http://localhost:5173',

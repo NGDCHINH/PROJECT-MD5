@@ -6,6 +6,7 @@ import { JwtAuthModule } from './modules/jwt-auth/jwt-auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { QuizsModule } from './modules/quizs/quizs.module';
+import { ScoreModule } from './modules/score/score.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { QuizsModule } from './modules/quizs/quizs.module';
     QuestionsModule,
     JwtAuthModule,
     QuizsModule,
+    ScoreModule,
   ],
   controllers: [],
   providers: [ConfigService],

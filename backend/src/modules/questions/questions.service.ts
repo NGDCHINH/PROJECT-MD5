@@ -94,28 +94,28 @@ export class QuestionsService {
     return data;
   }
   async update(id: number, updateQuestionDto: UpdateQuestionDto) {
-    const question = await this.questionRepository.findOne({ where: { id } });
+    const data = await this.questionRepository.findOne({ where: { id } });
 
-    if (!question) {
+    if (!data) {
       throw new NotFoundException(`Không tìm thấy câu hỏi`);
     }
 
-    Object.assign(question, updateQuestionDto);
+    Object.assign(data, updateQuestionDto);
 
-    await this.questionRepository.save(question);
+    await this.questionRepository.save(data);
 
     return `Sửa thành công`;
   }
 
   async remove(id: number) {
-    const question = await this.questionRepository.findOne({
+    const data = await this.questionRepository.findOne({
       where: { id },
     });
 
-    if (!question) {
+    if (!data) {
       throw new NotFoundException(`Không tìm thấy câu hỏi`);
     }
-    await this.questionRepository.remove(question);
+    await this.questionRepository.remove(data);
     return `Xoá thành công`;
   }
 }
