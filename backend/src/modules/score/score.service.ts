@@ -4,6 +4,8 @@ import { UpdateScoreDto } from './dto/update-score.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ScoreEntity } from './entities/score.entity';
 import { Repository } from 'typeorm';
+import { QuizEntity } from '../quizs/entities/quiz.entity';
+import { UserEntity } from '../users/entities/user.entity';
 import { QuizsService } from '../quizs/quizs.service';
 import { UsersService } from '../users/users.service';
 
@@ -18,64 +20,83 @@ export class ScoreService {
 
   async saveScore(
     createScoreDto: CreateScoreDto,
-    userId: number,
+    userID: number,
     quizId: number,
   ) {
-    const quizs = await this.quizService.findOne(quizId);
-    const users = await this.userService.findUser(userId);
+    console.log('User id', userID);
+    console.log('Quiz id', quizId);
+    const quiz = await this.quizService.findOne(quizId);
+    console.log(quiz);
 
-    if (!quizs) {
-      throw new NotFoundException(`Không tìm thấy quiz`);
-    } else if (!users) {
-      throw new NotFoundException(`Không tìm thấy người dùng`);
+    if (!quiz) {
+      throw new NotFoundException(`Không tìm thấy bài kiểm tra`);
     }
+    const user = await this.userService.findUser(userID);
+    if (!user) {
+      throw new NotFoundException(`Không tìm thấy người dùng`);
+    }
+
+    const percentage = (createScoreDto.score / createScoreDto.total) * 100;
+    const result = this.calculateResult(percentage);
 
     const score = this.scoreRepository.create({
-      score: createScoreDto.score,
-      total: createScoreDto.total,
-      percentage: (createScoreDto.score / createScoreDto.total) * 100,
-      result: this.calculateResult(
-        (createScoreDto.score / createScoreDto.total) * 100,
-      ),
-      quiz: quizs,
-      user: users,
+      ...createScoreDto,
+      percentage,
+      result,
+      user,
+      quiz,
     });
 
-    return await this.scoreRepository.save(score);
+    await this.scoreRepository.save(score);
+
+    return score;
   }
+
   calculateResult(percentage: number): string {
-    if (percentage >= 70) {
-      return 'Đạt';
-    } else {
-      return 'Trượt';
+    return percentage >= 80 ? 'Đậu' : 'Rớt';
+  }
+
+  async findAll(): Promise<ScoreEntity[]> {
+    return this.scoreRepository.find({
+      relations: ['quiz', 'user'],
+    });
+  }
+
+  async findOne(id: number): Promise<ScoreEntity> {
+    const score = await this.scoreRepository.findOne({
+      where: { id },
+      relations: ['quiz', 'user'],
+    });
+
+    if (!score) {
+      throw new NotFoundException(`Không tìm thấy điểm số`);
     }
+
+    return score;
   }
 
-  findAll() {
-    const data = this.scoreRepository.find();
-    return data;
-  }
+  async update(id: number, updateScoreDto: UpdateScoreDto): Promise<string> {
+    const score = await this.scoreRepository.findOne({ where: { id } });
 
-  findOne(id: number) {
-    const data = this.scoreRepository.findOne({ where: { id } });
-  }
-
-  async update(id: number, updateScoreDto: UpdateScoreDto) {
-    const data = await this.scoreRepository.findOne({ where: { id } });
-    if (!data) {
-      throw new NotFoundException(`Không tìm thấy điểm số`);
+    if (!score) {
+      throw new NotFoundException(`Không tìm thấy điểm số`);
     }
-    Object.assign(data, updateScoreDto);
-    await this.scoreRepository.save(updateScoreDto);
-    return `Cập nhật điểm số thành công`;
+
+    Object.assign(score, updateScoreDto);
+    await this.scoreRepository.save(score);
+
+    return `Cập nhật điểm số thành công`;
   }
 
-  async remove(id: number) {
-    const data = await this.scoreRepository.findOne({ where: { id } });
-    if (!data) {
-      throw new NotFoundException(`Không tìm thấy điểm số`);
+  async remove(id: number): Promise<string> {
+    const score = await this.scoreRepository.findOne({ where: { id } });
+
+    if (!score) {
+      throw new NotFoundException(`Không tìm thấy điểm số`);
     }
-    await this.scoreRepository.remove(data);
-    return `Xóa điểm số thành công`;
+
+    await this.scoreRepository.remove(score);
+
+    return `Xóa điểm số thành công`;
   }
 }

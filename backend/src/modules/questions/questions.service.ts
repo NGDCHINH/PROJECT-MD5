@@ -28,24 +28,11 @@ export class QuestionsService {
     question.options = createQuestionDto.options;
     question.correctOption = createQuestionDto.correctOption;
 
-    // // Initialize Firebase Admin SDK
-    // try {
-    //   const serviceAccount = require(process.env.FIREBASE_ACCOUNT_KEY);
-    //   admin.initializeApp({
-    //     credential: admin.credential.cert(serviceAccount),
-    //     storageBucket: process.env.FIREBASE_URL,
-    //   });
-    // } catch (error) {
-    //   console.error('Error initializing Firebase:', error);
-    //   process.exit(1);
-    // }
-
-    // Download and save the image
     if (createQuestionDto.image) {
       try {
         const imageUrl = createQuestionDto.image;
         const imageName = path.basename(imageUrl);
-        const imageDir = path.join(__dirname, '..', '..', 'shared', 'image');
+        const imageDir = path.join('src', 'shared', 'image');
         const imagePath = path.join(imageDir, imageName);
 
         if (!fs.existsSync(imageDir)) {

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { QuizEntity } from './entities/quiz.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 import { QuestionsService } from '../questions/questions.service';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 
@@ -17,19 +17,25 @@ export class QuizsService {
     const quiz = new QuizEntity();
     quiz.title = createQuizDto.title;
     quiz.category = createQuizDto.category;
-    quiz.image = createQuizDto.image;
     quiz.passingPercentage = createQuizDto.passingPercentage;
     quiz.createdBy = createQuizDto.createdBy;
     const questions = await this.questionsService.findAll();
     quiz.questions = questions;
     return this.quizRepository.save(quiz);
   }
-
   async findAll() {
-    const data = await this.quizRepository.find({
+    const quizzes = await this.quizRepository.find({
       relations: ['questions'],
     });
-    return data;
+
+    if (!quizzes || quizzes.length === 0) {
+      throw new NotFoundException(`Không tìm thấy Quiz`);
+    }
+
+    const shuffledQuizzes = quizzes.sort(() => Math.random() - 0.5);
+    const randomQuizzes = shuffledQuizzes.slice(0, 5);
+
+    return randomQuizzes;
   }
 
   async findOne(id: number) {

@@ -19,7 +19,7 @@ export class UserEntity {
   @Column({ default: '' })
   avatar: string;
   @Column({ type: 'tinyint', default: 0 })
-  roles: number;
+  role: number;
   @OneToMany(() => ScoreEntity, (score) => score.user)
   scores: ScoreEntity[];
 }

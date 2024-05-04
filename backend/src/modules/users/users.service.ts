@@ -55,6 +55,8 @@ export class UsersService {
       const user = await this.userRepository.findOne({
         where: { email },
       });
+      console.log('data login', user);
+
       const isMatch = await bcrypt.compare(password, user.password);
       if (user && isMatch) {
         return user;

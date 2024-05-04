@@ -21,6 +21,12 @@ async function bootstrap() {
     console.error('Error initializing Firebase:', error);
     process.exit(1);
   }
+  // app.enableCors({
+  //   allowedHeaders: 'Content-Type, Accept, Access-Control-Allow-Origin',
+  //   methods: 'GET,PUT,POST,DELETE,UPDATE,OPTIONS',
+  //   credentials: true,
+  //   origin: true,
+  // });
   app.use(
     cors({
       origin: 'http://localhost:5173',

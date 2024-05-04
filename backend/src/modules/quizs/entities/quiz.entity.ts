@@ -10,11 +10,14 @@ export class QuizEntity {
   @Column({ unique: true })
   title: string;
 
-  @Column()
+  @Column({ default: '' })
   image: string;
 
   @Column()
   category: string;
+
+  @Column({ default: 10 })
+  maxScore: number;
 
   @Column()
   passingPercentage: number;

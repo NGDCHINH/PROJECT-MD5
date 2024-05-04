@@ -18,14 +18,16 @@ import { JwtAuthGuard } from 'src/shared/guard/jwt-auth.strategy';
 export class ScoreController {
   constructor(private readonly scoreService: ScoreService) {}
 
-  @Post()
   @UseGuards(JwtAuthGuard)
-  async saveScore(@Body() createScoreDto: CreateScoreDto, @Req() req) {
-    const userId = req.user.id;
-    const quizId = req.body.quizId;
-    return await this.scoreService.saveScore(createScoreDto, userId, quizId);
+  @Post('save/:quizId')
+  async saveScore(
+    @Body() createScoreDto: CreateScoreDto,
+    @Req() req,
+    @Param('quizId') quizId: number,
+  ) {
+    const userID = req.user.userId;
+    return await this.scoreService.saveScore(createScoreDto, userID, quizId);
   }
-
   @Get()
   findAll() {
     return this.scoreService.findAll();
