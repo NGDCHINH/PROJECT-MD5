@@ -1,18 +1,16 @@
 import React, { useState } from "react";
-
-import {} from "../../components/header&etc/SideBarAdmin";
 import { Header } from "../../components/header&etc/Header";
 import { SideBarClient } from "../../components/header&etc/SideBarClient";
-import { Cards } from "../../components/quiz/Cards";
 import { Outlet } from "react-router-dom";
 
 export const ClientPage = () => {
-  const [sibarToggle, setSibarToggle] = useState(false);
+  const [sidebarToggle, setSidebarToggle] = useState(false);
+
   return (
-    <div>
-      <Header sibarToggle={sibarToggle} setSibarToggle={setSibarToggle} />
+    <div className="h-screen bg-gray-200">
+      <Header sibarToggle={sidebarToggle} setSibarToggle={setSidebarToggle} />
       <div className="flex">
-        <SideBarClient sideBarToggle={sibarToggle} />
+        <SideBarClient sideBarToggle={sidebarToggle} />
         <Outlet />
       </div>
     </div>

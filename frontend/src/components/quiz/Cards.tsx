@@ -16,6 +16,7 @@ interface Question {
   id: number;
   question: string;
   category: string;
+  maxScore: number;
   image: string;
   options: string[];
   correctOption: string;

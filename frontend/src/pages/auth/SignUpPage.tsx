@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo1 from "../../assets/quiz1.png";
 import axios from "axios";
-import Popup from "reactjs-popup";
+import Swal from "sweetalert2";
 
 export const SignUpPage = () => {
   const [inputValue, setInputValue] = useState({
@@ -13,7 +13,6 @@ export const SignUpPage = () => {
   });
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [error, setError] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
   const Nav = useNavigate();
 
   const handleOnChange = (e) => {
@@ -29,7 +28,7 @@ export const SignUpPage = () => {
     if (inputValue.password !== inputValue.confirm_password) {
       setPasswordMatch(false);
       setError("Mật khẩu không trùng khớp!");
-      setShowPopup(true);
+      showAlert("Error", "Mật khẩu không trùng khớp!", "error");
       return;
     }
     try {
@@ -39,14 +38,23 @@ export const SignUpPage = () => {
       );
       if (res.data.error) {
         setError(res.data.error);
-        setShowPopup(true);
+        showAlert("Error", res.data.error, "error");
         return;
       }
       Nav("/signin");
     } catch (error) {
       console.log("Error during login:", error);
-      setError("Đăng ký thất bại.");
+      showAlert("Error", "Đăng ký thất bại.", "error");
     }
+  };
+
+  const showAlert = (title, text, icon) => {
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      confirmButtonText: "OK",
+    });
   };
 
   return (
@@ -124,13 +132,9 @@ export const SignUpPage = () => {
           </a>
           .
         </div>
-
-        <Popup open={showPopup} onClose={() => setShowPopup(false)}>
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-            {error || "Mật khẩu không trùng khớp!"}
-          </div>
-        </Popup>
       </div>
     </div>
   );
 };
+
+export default SignUpPage;

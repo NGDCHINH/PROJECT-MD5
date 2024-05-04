@@ -3,6 +3,7 @@ import logo1 from "../../assets/quiz1.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 export const SignInPage: React.FC = () => {
   const [inputValue, setInputValue] = useState({
@@ -23,7 +24,7 @@ export const SignInPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post<{ token: string }>(
+      const res = await axios.post<{ token: string; role: string }>(
         "http://localhost:8080/auth/login",
         inputValue,
         {
@@ -32,15 +33,30 @@ export const SignInPage: React.FC = () => {
       );
 
       const token = res.data.token;
+      const role = res.data.role;
 
-      // Lưu token vào cookie
       Cookies.set("token", token);
+      Cookies.set("role", role);
 
-      // Chuyển hướng đến trang /app
-      Nav("/app");
+      if (role === "Admin") {
+        Nav("/admin");
+        Swal.fire({
+          icon: "success",
+          title: "Chào mừng trở lại",
+        });
+      } else {
+        Nav("/app");
+        Swal.fire({
+          icon: "success",
+          title: "Đăng nhập thành công",
+        });
+      }
     } catch (error) {
-      console.log("Error during login:", error);
-      setError("Failed to login.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Lỗi đăng nhập!",
+      });
     }
   };
 

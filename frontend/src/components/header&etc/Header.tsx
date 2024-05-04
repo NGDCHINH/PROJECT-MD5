@@ -50,6 +50,7 @@ export const Header = ({ sibarToggle, setSibarToggle }: any) => {
 
   const handleSignOut = () => {
     Cookies.remove("token");
+    Cookies.remove("role");
     setIsLoggedIn(false);
     setIsMenuOpen(false);
   };
