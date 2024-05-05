@@ -21,7 +21,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   findUser(@Request() req) {
-    const userID = req.user.userId;
+    const userID = req.user.id;
     return this.usersService.findUser(userID);
   }
   @Post('create')

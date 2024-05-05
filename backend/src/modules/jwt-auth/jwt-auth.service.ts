@@ -17,10 +17,12 @@ export class JwtAuthService {
   async login(user: any) {
     try {
       const payload = {
+        id: user.id,
         role: user.role,
         username: user.username,
         avatar: user.avatar,
       };
+      console.log('payload', payload);
 
       if (user.role === 0 || user.role === undefined) {
         payload.role = 'User';

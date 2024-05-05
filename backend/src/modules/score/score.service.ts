@@ -23,11 +23,7 @@ export class ScoreService {
     userID: number,
     quizId: number,
   ) {
-    console.log('User id', userID);
-    console.log('Quiz id', quizId);
     const quiz = await this.quizService.findOne(quizId);
-    console.log(quiz);
-
     if (!quiz) {
       throw new NotFoundException(`Không tìm thấy bài kiểm tra`);
     }
@@ -35,10 +31,8 @@ export class ScoreService {
     if (!user) {
       throw new NotFoundException(`Không tìm thấy người dùng`);
     }
-
     const percentage = (createScoreDto.score / createScoreDto.total) * 100;
     const result = this.calculateResult(percentage);
-
     const score = this.scoreRepository.create({
       ...createScoreDto,
       percentage,
@@ -46,12 +40,9 @@ export class ScoreService {
       user,
       quiz,
     });
-
     await this.scoreRepository.save(score);
-
     return score;
   }
-
   calculateResult(percentage: number): string {
     return percentage >= 80 ? 'Đậu' : 'Rớt';
   }
@@ -62,41 +53,33 @@ export class ScoreService {
     });
   }
 
-  async findOne(id: number): Promise<ScoreEntity> {
+  async findOne(userID: number): Promise<ScoreEntity> {
     const score = await this.scoreRepository.findOne({
-      where: { id },
+      where: { id: userID },
       relations: ['quiz', 'user'],
     });
-
     if (!score) {
       throw new NotFoundException(`Không tìm thấy điểm số`);
     }
-
     return score;
   }
 
   async update(id: number, updateScoreDto: UpdateScoreDto): Promise<string> {
     const score = await this.scoreRepository.findOne({ where: { id } });
-
     if (!score) {
       throw new NotFoundException(`Không tìm thấy điểm số`);
     }
-
     Object.assign(score, updateScoreDto);
     await this.scoreRepository.save(score);
 
     return `Cập nhật điểm số thành công`;
   }
-
   async remove(id: number): Promise<string> {
     const score = await this.scoreRepository.findOne({ where: { id } });
-
     if (!score) {
       throw new NotFoundException(`Không tìm thấy điểm số`);
     }
-
     await this.scoreRepository.remove(score);
-
     return `Xóa điểm số thành công`;
   }
 }

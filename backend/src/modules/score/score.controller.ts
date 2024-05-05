@@ -25,7 +25,9 @@ export class ScoreController {
     @Req() req,
     @Param('quizId') quizId: number,
   ) {
-    const userID = req.user.userId;
+    const userID = req.user.id;
+    console.log('userID', userID);
+
     return await this.scoreService.saveScore(createScoreDto, userID, quizId);
   }
   @Get()
@@ -34,8 +36,10 @@ export class ScoreController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.scoreService.findOne(+id);
+  @UseGuards(JwtAuthGuard)
+  findOne(@Req() req) {
+    const userID = req.user.id;
+    return this.scoreService.findOne(userID);
   }
 
   @Patch(':id')

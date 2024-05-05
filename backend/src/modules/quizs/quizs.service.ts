@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { QuizEntity } from './entities/quiz.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,6 +18,14 @@ export class QuizsService {
     private readonly questionsService: QuestionsService,
   ) {}
   async create(createQuizDto: CreateQuizDto) {
+    const existingQuiz = await this.quizRepository.findOne({
+      where: { category: createQuizDto.category },
+    });
+
+    if (existingQuiz) {
+      throw new ConflictException('Đã tồn tại quiz với category tương tự.');
+    }
+
     const quiz = new QuizEntity();
     quiz.title = createQuizDto.title;
     quiz.category = createQuizDto.category;
@@ -31,7 +43,6 @@ export class QuizsService {
     if (!quizzes || quizzes.length === 0) {
       throw new NotFoundException(`Không tìm thấy Quiz`);
     }
-
     const shuffledQuizzes = quizzes.sort(() => Math.random() - 0.5);
     const randomQuizzes = shuffledQuizzes.slice(0, 5);
 
