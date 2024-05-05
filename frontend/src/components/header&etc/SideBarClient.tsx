@@ -3,6 +3,7 @@ import {
   AppstoreOutlined,
   MailOutlined,
   SettingOutlined,
+  TableOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
@@ -49,7 +50,13 @@ const items: MenuProps["items"] = [
 
   { type: "divider" },
 
-  getItem("Bảng điểm", "score", null),
+  getItem(
+    "Bảng điểm",
+    "score",
+    <Link to={"score"}>
+      <TableOutlined />
+    </Link>
+  ),
 ];
 
 export const SideBarClient = ({

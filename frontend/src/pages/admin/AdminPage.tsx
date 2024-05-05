@@ -2,13 +2,18 @@ import React, { useState } from "react";
 
 import { SideBarAdmin } from "../../components/header&etc/SideBarAdmin";
 import { Header } from "../../components/header&etc/Header";
+import { Outlet } from "react-router-dom";
 
 export const AdminPage = () => {
   const [sibarToggle, setSibarToggle] = useState(false);
+
   return (
-    <div>
+    <div className="h-screen bg-gray-200">
       <Header sibarToggle={sibarToggle} setSibarToggle={setSibarToggle} />
-      <SideBarAdmin sideBarToggle={sibarToggle} />
+      <div className="flex h-screen">
+        <SideBarAdmin sideBarToggle={sibarToggle} />
+        <Outlet />
+      </div>
     </div>
   );
 };

@@ -9,7 +9,7 @@ export const ClientPage = () => {
   return (
     <div className="h-screen bg-gray-200">
       <Header sibarToggle={sidebarToggle} setSibarToggle={setSidebarToggle} />
-      <div className="flex">
+      <div className="flex h-screen">
         <SideBarClient sideBarToggle={sidebarToggle} />
         <Outlet />
       </div>

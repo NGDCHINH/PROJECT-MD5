@@ -106,7 +106,6 @@ export const QuizForm = () => {
         }. Phần trăm: ${(totalScore / card.maxScore) * 100}%`,
         passed ? "success" : "error"
       );
-
       const scoreData = {
         score: totalScore,
         total: card.maxScore,

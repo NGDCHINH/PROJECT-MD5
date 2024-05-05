@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   AppstoreOutlined,
   MailOutlined,
-  SettingOutlined,
+  TableOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
@@ -35,7 +35,7 @@ const items: MenuProps["items"] = [
       getItem(
         "Trang chủ",
         "1",
-        <Link to={"/"}>
+        <Link to={"/admin"}>
           {" "}
           <IoHomeOutline />{" "}
         </Link>
@@ -44,22 +44,23 @@ const items: MenuProps["items"] = [
     "group"
   ),
   getItem("Quiz", "sub1", <MailOutlined />, [
-    getItem("Danh sách", "2"),
-    getItem("Thêm", "3"),
-    getItem("Sửa", "4"),
-    getItem("Xoá", "5"),
+    getItem("Danh sách", "2", <Link to={"quiz"}></Link>),
+    getItem("Thêm", "3", <Link to={"create-quiz"}></Link>),
   ]),
-
-  getItem("Members", "sub2", <AppstoreOutlined />, [
-    getItem("Danh sách", "6"),
-    getItem("Thêm", "7"),
-    getItem("Sửa", "8"),
-    getItem("Xoá", "9"),
+  getItem("Question", "sub2", <MailOutlined />, [
+    getItem("Danh sách", "4", <Link to={"questions"}></Link>),
+    getItem("Thêm", "5", <Link to={"create-question"}></Link>),
   ]),
 
   { type: "divider" },
 
-  getItem("Bảng điểm", "score", null),
+  getItem(
+    "Bảng điểm",
+    "score",
+    <Link to={"score"}>
+      <TableOutlined />
+    </Link>
+  ),
 ];
 
 export const SideBarAdmin = ({ sideBarToggle }: { sideBarToggle: boolean }) => {
