@@ -90,9 +90,6 @@ export const UserScore: React.FC = () => {
             <th scope="col" className="px-6 py-3">
               Người test
             </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -130,14 +127,6 @@ export const UserScore: React.FC = () => {
                     <li key={score.user.id}>{score.user.username}</li>
                   </ul>
                 )}
-              </td>
-              <td className="flex items-center px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
-                >
-                  Xoá
-                </a>
               </td>
             </tr>
           ))}

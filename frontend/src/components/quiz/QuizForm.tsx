@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 import Cookies from "js-cookie";
+import errorimg from "../../assets/quiz1.png";
 
 interface CardProps {
   id: number;
@@ -155,8 +156,8 @@ export const QuizForm = () => {
             </label>
             <div>
               <img
-                src={questions[currentIndex].image}
-                className="w-screen h-64 object-cover mb-4"
+                src={questions[currentIndex].image || errorimg}
+                className="w-[350px] h-64 object-cover mb-4"
                 alt={`Question ${currentIndex + 1}`}
               />
             </div>

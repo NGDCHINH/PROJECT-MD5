@@ -15,6 +15,7 @@ import { UpdateForm } from "./components/quiz/UpdateForm";
 import { UpdateFormQuestion } from "./components/questions/UpdateFormQuestion";
 import { AdminScore } from "./components/score/AdminScore";
 import { UserScore } from "./components/score/UserScore";
+import { Profile } from "./components/header&etc/Profile";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="quiz" element={<Cards />} />
           <Route path="quiz/:id" element={<QuizForm />} />
           <Route path="score" element={<UserScore />}></Route>
+          <Route path="profile" element={<Profile />}></Route>
         </Route>
       </Routes>
     </>
